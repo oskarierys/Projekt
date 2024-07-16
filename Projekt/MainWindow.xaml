@@ -24,7 +24,7 @@
                 <ColumnDefinition Width="3*"/>
             </Grid.ColumnDefinitions>
 
-            <DataGrid CanUserAddRows="False" CanUserDeleteRows="False" ItemsSource="{Binding Persons}" SelectedItem="{Binding SelectedPerson}">
+            <DataGrid AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" ItemsSource="{Binding Persons}" SelectedItem="{Binding SelectedPerson}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="3*"/>
                     <DataGridTextColumn Header="Surname" Binding="{Binding Surname}" Width="3*"/>
@@ -35,13 +35,13 @@
 
             <StackPanel Grid.Column="1">
                 <Label Content="Name"/>
-                <TextBox Margin="5,0,5,15" Text="{Binding SelectedPerson.Name, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox Margin="5,0,5,15" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
                 <Label Content="Surname"/>
-                <TextBox Margin="5,0,5,15" Text="{Binding SelectedPerson.Surname, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox Margin="5,0,5,15" Text="{Binding Surname, UpdateSourceTrigger=PropertyChanged}"/>
                 <Label Content="Age"/>
-                <TextBox Margin="5,0,5,15" Text="{Binding SelectedPerson.Age, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox Margin="5,0,5,15" Text="{Binding Age, UpdateSourceTrigger=PropertyChanged}"/>
                 <Label Content="Gender"/>
-                <ComboBox Margin="5,0,5,15">
+                <ComboBox Margin="5,0,5,15" SelectedValue="{Binding Gender, UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="Content">
                     <ComboBoxItem Content="Male"/>
                     <ComboBoxItem Content="Female"/>
                     <ComboBoxItem Content="Other"/>

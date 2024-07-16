@@ -84,6 +84,11 @@ namespace Projekt.ViewModels
             };
 
             Persons.Add(newPerson);
+            Name = string.Empty;
+            Surname = string.Empty;
+            Age = 0;
+
+            Gender = string.Empty;
         }
 
         private void DeletePerson()
