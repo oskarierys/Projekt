@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Configuration;
 
 namespace Projekt
 {
@@ -27,6 +28,8 @@ namespace Projekt
             
             MainWindowViewModel vm = new MainWindowViewModel();
             DataContext = vm;
+
+            string connectionString = ConfigurationManager.ConnectionStrings["Projekt.Properties.Settings.PersonDBConnectionString"].ConnectionString;
         }
     }
 }

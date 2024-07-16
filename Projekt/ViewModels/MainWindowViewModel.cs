@@ -3,11 +3,15 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using Projekt.MVVM;
 using System.Security.Cryptography.X509Certificates;
+using System.Linq;
+using Projekt.Data;
 
 namespace Projekt.ViewModels
 {
     internal class MainWindowViewModel : ViewModelBase
     {
+        private PersonRepository _repository;
+
         public ObservableCollection<Person> Persons { get; set; }
 
         public RelayCommand AddCommand => new RelayCommand(execute => AddPerson());
@@ -15,6 +19,7 @@ namespace Projekt.ViewModels
 
         public MainWindowViewModel()
         {
+            _repository = new PersonRepository();
             Persons = new ObservableCollection<Person>();
         }
 
