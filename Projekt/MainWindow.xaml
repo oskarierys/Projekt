@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Projekt"
+        xmlns:vm="clr-namespace:Projekt.ViewModels"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="600">
     <Grid>
@@ -40,7 +41,11 @@
                 <Label Content="Age"/>
                 <TextBox Margin="5,0,5,15" Text="{Binding SelectedPerson.Age, UpdateSourceTrigger=PropertyChanged}"/>
                 <Label Content="Gender"/>
-                <ComboBox Margin="5,0,5,15"/>
+                <ComboBox Margin="5,0,5,15">
+                    <ComboBoxItem Content="Male"/>
+                    <ComboBoxItem Content="Female"/>
+                    <ComboBoxItem Content="Other"/>
+                </ComboBox>
             </StackPanel>
         </Grid>
     </Grid>
