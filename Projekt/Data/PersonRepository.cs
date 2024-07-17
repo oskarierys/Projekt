@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
@@ -12,34 +13,55 @@ namespace Projekt.Data
 
         public PersonRepository()
         {
-            _connectionString = ConfigurationManager.ConnectionStrings["Projekt.Properties.Settings.PersonDBConnectionString"].ConnectionString;
+            try
+            {
+                _connectionString = ConfigurationManager.ConnectionStrings["Projekt.Properties.Settings.PersonDBConnectionString"]?.ConnectionString;
+
+                if (string.IsNullOrEmpty(_connectionString))
+                {
+                    throw new InvalidOperationException("Connection string 'PersonDB' not found.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error initializing PersonRepository: {ex.Message}");
+                throw;
+            }
         }
 
         public IEnumerable<Person> GetPersons()
         {
             var persons = new List<Person>();
 
-            using (SqlConnection connection = new SqlConnection(_connectionString))
+            try
             {
-                connection.Open();
-
-                using (SqlCommand command = new SqlCommand("SELECT * FROM Persons", connection))
+                using (SqlConnection connection = new SqlConnection(_connectionString))
                 {
-                    using (SqlDataReader reader = command.ExecuteReader())
+                    connection.Open();
+
+                    using (SqlCommand command = new SqlCommand("SELECT * FROM Persons", connection))
                     {
-                        while (reader.Read())
+                        using (SqlDataReader reader = command.ExecuteReader())
                         {
-                            persons.Add(new Person
+                            while (reader.Read())
                             {
-                                Id = reader.GetInt32(0),
-                                Name = reader.GetString(1),
-                                Surname = reader.GetString(2),
-                                Age = reader.GetInt32(3),
-                                Gender = reader.GetString(4)
-                            });
+                                persons.Add(new Person
+                                {
+                                    Id = reader.GetInt32(0),
+                                    Name = reader.GetString(1),
+                                    Surname = reader.GetString(2),
+                                    Age = reader.GetInt32(3),
+                                    Gender = reader.GetString(4)
+                                });
+                            }
                         }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error retrieving persons: {ex.Message}");
+                throw;
             }
 
             return persons;
@@ -47,35 +69,50 @@ namespace Projekt.Data
 
         public void AddPerson(Person person)
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
+            try
             {
-                connection.Open();
-
-                using (SqlCommand command = new SqlCommand("INSERT INTO Persons (Name, Surname, Age, Gender) VALUES (@Name, @Surname, @Age, @Gender)", connection))
+                using (SqlConnection connection = new SqlConnection(_connectionString))
                 {
-                    command.Parameters.AddWithValue("@Name", person.Name);
-                    command.Parameters.AddWithValue("@Surname", person.Surname);
-                    command.Parameters.AddWithValue("@Age", person.Age);
-                    command.Parameters.AddWithValue("@Gender", person.Gender);
+                    connection.Open();
 
-                    command.ExecuteNonQuery();
+                    using (SqlCommand command = new SqlCommand("INSERT INTO Persons (Name, Surname, Age, Gender) VALUES (@Name, @Surname, @Age, @Gender)", connection))
+                    {
+                        command.Parameters.AddWithValue("@Name", person.Name);
+                        command.Parameters.AddWithValue("@Surname", person.Surname);
+                        command.Parameters.AddWithValue("@Age", person.Age);
+                        command.Parameters.AddWithValue("@Gender", person.Gender);
+
+                        command.ExecuteNonQuery();
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error adding person: {ex.Message}");
+                throw;
             }
         }
 
         public void DeletePerson(int id)
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
+            try
             {
-                connection.Open();
-
-                using (SqlCommand command = new SqlCommand("DELETE FROM Persons WHERE Id = @Id", connection))
+                using (SqlConnection connection = new SqlConnection(_connectionString))
                 {
-                    command.Parameters.AddWithValue("@Id", id);
-                    command.ExecuteNonQuery();
+                    connection.Open();
+
+                    using (SqlCommand command = new SqlCommand("DELETE FROM Persons WHERE Id = @Id", connection))
+                    {
+                        command.Parameters.AddWithValue("@Id", id);
+                        command.ExecuteNonQuery();
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error deleting person: {ex.Message}");
+                throw;
             }
         }
     }
 }
-
