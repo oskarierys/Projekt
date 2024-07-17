@@ -39,7 +39,7 @@ namespace Projekt.Data
                 {
                     connection.Open();
 
-                    using (SqlCommand command = new SqlCommand("SELECT * FROM Persons", connection))
+                    using (SqlCommand command = new SqlCommand("SELECT * FROM dbo.Person", connection)) // Updated table name
                     {
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
@@ -75,7 +75,7 @@ namespace Projekt.Data
                 {
                     connection.Open();
 
-                    using (SqlCommand command = new SqlCommand("INSERT INTO Persons (Name, Surname, Age, Gender) VALUES (@Name, @Surname, @Age, @Gender)", connection))
+                    using (SqlCommand command = new SqlCommand("INSERT INTO dbo.Person (Name, Surname, Age, Gender) VALUES (@Name, @Surname, @Age, @Gender)", connection))
                     {
                         command.Parameters.AddWithValue("@Name", person.Name);
                         command.Parameters.AddWithValue("@Surname", person.Surname);
@@ -88,7 +88,7 @@ namespace Projekt.Data
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error adding person: {ex.Message}");
+                Console.WriteLine($"Error adding person: {ex.Message}\n{ex.StackTrace}");
                 throw;
             }
         }
@@ -101,7 +101,7 @@ namespace Projekt.Data
                 {
                     connection.Open();
 
-                    using (SqlCommand command = new SqlCommand("DELETE FROM Persons WHERE Id = @Id", connection))
+                    using (SqlCommand command = new SqlCommand("DELETE FROM dbo.Person WHERE Id = @Id", connection)) // Updated table name
                     {
                         command.Parameters.AddWithValue("@Id", id);
                         command.ExecuteNonQuery();

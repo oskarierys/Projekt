@@ -2,7 +2,6 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using Projekt.MVVM;
-using System.Security.Cryptography.X509Certificates;
 using System.Linq;
 using Projekt.Data;
 
@@ -14,13 +13,22 @@ namespace Projekt.ViewModels
 
         public ObservableCollection<Person> Persons { get; set; }
 
-        public RelayCommand AddCommand => new RelayCommand(execute => AddPerson());
+        public RelayCommand AddCommand
+        {
+            get
+            {
+                return new RelayCommand(
+                    execute => AddPerson(),
+                    canExecute => !string.IsNullOrEmpty(Name) && !string.IsNullOrEmpty(Surname) && Age > 0 && !string.IsNullOrEmpty(Gender)
+                );
+            }
+        }
         public RelayCommand DeleteCommand => new RelayCommand(execute => DeletePerson(), canExecute => SelectedPerson != null);
 
         public MainWindowViewModel()
         {
             _repository = new PersonRepository();
-            Persons = new ObservableCollection<Person>();
+            Persons = new ObservableCollection<Person>(_repository.GetPersons());
         }
 
         private string name;
@@ -71,8 +79,8 @@ namespace Projekt.ViewModels
         public Person SelectedPerson
         {
             get { return selectedPerson; }
-            set 
-            { 
+            set
+            {
                 selectedPerson = value;
                 OnPropertyChanged();
             }
@@ -88,19 +96,27 @@ namespace Projekt.ViewModels
                 Gender = this.Gender
             };
 
-            Persons.Add(newPerson);
+            _repository.AddPerson(newPerson);
+
+            Persons.Clear();
+            foreach (var person in _repository.GetPersons())
+            {
+                Persons.Add(person);
+            }
+
             Name = string.Empty;
             Surname = string.Empty;
             Age = 0;
-
             Gender = string.Empty;
         }
 
         private void DeletePerson()
         {
-            Persons.Remove(SelectedPerson);
+            if (SelectedPerson != null)
+            {
+                _repository.DeletePerson(SelectedPerson.Id);
+                Persons.Remove(SelectedPerson);
+            }
         }
-
     }
 }
-    

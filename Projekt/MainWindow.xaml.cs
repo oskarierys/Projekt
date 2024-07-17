@@ -28,8 +28,6 @@ namespace Projekt
             
             MainWindowViewModel vm = new MainWindowViewModel();
             DataContext = vm;
-
-            string connectionString = ConfigurationManager.ConnectionStrings["Projekt.Properties.Settings.PersonDBConnectionString"].ConnectionString;
         }
     }
 }
